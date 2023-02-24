@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: multitool-b
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multitool-b
+  template:
+    metadata:
+      labels:
+        app: multitool-b
+    spec:
+      containers:
+        - image: wbitt/network-multitool
+          imagePullPolicy: IfNotPresent
+          name: network-multitool
+          resources:
+            limits:
+              cpu: 200m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: be-svc
+spec:
+  ports:
+    - name: web-b
+      port: 8080
+  selector:
+    app: multitool-b
